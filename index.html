@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Critical Ops Configs | Premium Color Profiles</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-bg: #0a0a0f;
+            --secondary-bg: #12121a;
+            --card-bg: #1a1a24;
+            --accent: #ff6b35;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --border: #2a2a3a;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 107, 53, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(138, 43, 226, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 255, 255, 0.05) 0%, transparent 50%);
+            animation: bgPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes bgPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        header {
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .logo {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, #ff6b35 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            font-weight: 300;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .configs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            gap: 2rem;
+            padding: 3rem 0;
+        }
+
+        .config-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+        }
+
+        .config-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.8) 100%);
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .config-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            box-shadow: 0 20px 40px rgba(255, 107, 53, 0.2);
+        }
+
+        .config-card:hover::before {
+            opacity: 1;
+        }
+
+        .image-stack {
+            position: relative;
+            height: 300px;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .config-image {
+            width: 50%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.5s ease;
+        }
+
+        .config-image:first-child {
+            clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);
+        }
+
+        .config-image:last-child {
+            clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%);
+            margin-left: -15%;
+        }
+
+        .config-card:hover .config-image:first-child {
+            transform: scale(1.05);
+        }
+
+        .config-card:hover .config-image:last-child {
+            transform: scale(1.05);
+        }
+
+        .config-info {
+            padding: 1.5rem;
+            position: relative;
+            z-index: 2;
+            background: var(--card-bg);
+        }
+
+        .config-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .config-name {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .config-badge {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .golden .config-name { color: #ffd700; }
+        .golden .config-badge { background: rgba(255, 215, 0, 0.2); color: #ffd700; border: 1px solid #ffd700; }
+        .golden:hover { box-shadow: 0 20px 40px rgba(255, 215, 0, 0.3); border-color: #ffd700; }
+
+        .purple .config-name { color: #da70d6; }
+        .purple .config-badge { background: rgba(218, 112, 214, 0.2); color: #da70d6; border: 1px solid #da70d6; }
+        .purple:hover { box-shadow: 0 20px 40px rgba(218, 112, 214, 0.3); border-color: #da70d6; }
+
+        .blue .config-name { color: #00bfff; }
+        .blue .config-badge { background: rgba(0, 191, 255, 0.2); color: #00bfff; border: 1px solid #00bfff; }
+        .blue:hover { box-shadow: 0 20px 40px rgba(0, 191, 255, 0.3); border-color: #00bfff; }
+
+        .red .config-name { color: #ff4444; }
+        .red .config-badge { background: rgba(255, 68, 68, 0.2); color: #ff4444; border: 1px solid #ff4444; }
+        .red:hover { box-shadow: 0 20px 40px rgba(255, 68, 68, 0.3); border-color: #ff4444; }
+
+        .green .config-name { color: #00ff88; }
+        .green .config-badge { background: rgba(0, 255, 136, 0.2); color: #00ff88; border: 1px solid #00ff88; }
+        .green:hover { box-shadow: 0 20px 40px rgba(0, 255, 136, 0.3); border-color: #00ff88; }
+
+        .config-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(135deg, var(--accent) 0%, #ff8c5a 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .config-card:hover .download-btn {
+            background: white;
+            color: var(--primary-bg);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .feature {
+            padding: 2rem;
+            background: var(--secondary-bg);
+            border-radius: 15px;
+            border: 1px solid var(--border);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .feature h3 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            border-top: 1px solid var(--border);
+            margin-top: 4rem;
+            color: var(--text-secondary);
+        }
+
+        .disclaimer {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background: rgba(255, 107, 53, 0.1);
+            border-left: 4px solid var(--accent);
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .configs-grid {
+                grid-template-columns: 1fr;
+            }
+            .image-stack {
+                height: 250px;
+            }
+            .config-image:first-child {
+                clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%);
+            }
+            .config-image:last-child {
+                clip-path: polygon(10% 0, 100% 0, 100% 100%, 0 100%);
+                margin-left: -10%;
+            }
+            .features {
+                grid-template-columns: 1fr;
+            }
+            .logo {
+                font-size: 2rem;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    
+    <header>
+        <div class="container">
+            <h1 class="logo">Critical Ops Configs</h1>
+            <p class="subtitle">Premium Color Profiles for Enhanced Gameplay</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="configs-grid">
+            <!-- GOLDEN CONFIG - MG_2270 & MG_2271 -->
+            <a href="https://www.mediafire.com/file/pz6udnre7r50lhc/golden.plist/file" target="_blank" class="config-card golden fade-in">
+                <div class="image-stack">
+                    <img src="https://i.ibb.co/DHzkJNWR/MG-2270.jpg" alt="Golden Config 1" class="config-image" loading="lazy">
+                    <img src="https://i.ibb.co/v4TyxmvW/MG-2271.jpg" alt="Golden Config 2" class="config-image" loading="lazy">
+                </div>
+                <div class="config-info">
+                    <div class="config-header">
+                        <h2 class="config-name">Golden Dynasty</h2>
+                        <span class="config-badge">Premium</span>
+                    </div>
+                    <p class="config-desc">Luxurious golden atmosphere with warm amber tones. Perfect for players who demand royalty in every match.</p>
+                    <div class="download-btn">
+                        <i class="fas fa-download"></i>
+                        Download Config (.plist)
+                    </div>
+                </div>
+            </a>
+
+            <!-- PURPLE CONFIG - MG_2272 & MG_2273 -->
+            <a href="https://www.mediafire.com/file/fy93npan2kzrvwd/purple.plist/file" target="_blank" class="config-card purple fade-in">
+                <div class="image-stack">
+                    <img src="https://i.ibb.co/1JhD1mcW/MG-2272.jpg" alt="Purple Config 1" class="config-image" loading="lazy">
+                    <img src="https://i.ibb.co/4npxN1cc/MG-2273.jpg" alt="Purple Config 2" class="config-image" loading="lazy">
+                </div>
+                <div class="config-info">
+                    <div class="config-header">
+                        <h2 class="config-name">Neon Purple</h2>
+                        <span class="config-badge">Cyber</span>
+                    </div>
+                    <p class="config-desc">Deep violet skies with electric pink accents. Cyberpunk aesthetic for the modern warrior.</p>
+                    <div class="download-btn">
+                        <i class="fas fa-download"></i>
+                        Download Config (.plist)
+                    </div>
+                </div>
+            </a>
+
+            <!-- BLUE CONFIG - MG_2274 & MG_2275 -->
+            <a href="https://www.mediafire.com/file/fe6lraos131l031/blue.plist/file" target="_blank" class="config-card blue fade-in">
+                <div class="image-stack">
+                    <img src="https://i.ibb.co/RpCYQQ97/MG-2274.jpg" alt="Blue Config 1" class="config-image" loading="lazy">
+                    <img src="https://i.ibb.co/ZzW6SYbZ/MG-2275.jpg" alt="Blue Config 2" class="config-image" loading="lazy">
+                </div>
+                <div class="config-info">
+                    <div class="config-header">
+                        <h2 class="config-name">Arctic Aurora</h2>
+                        <span class="config-badge">Frozen</span>
+                    </div>
+                    <p class="config-desc">Icy blue northern lights with crystalline clarity. Cold, calculated precision for snipers.</p>
+                    <div class="download-btn">
+                        <i class="fas fa-download"></i>
+                        Download Config (.plist)
+                    </div>
+                </div>
+            </a>
+
+            <!-- RED CONFIG - MG_2276 & MG_2277 -->
+            <a href="https://www.mediafire.com/file/yfgxthhordsqxd7/red.plist/file" target="_blank" class="config-card red fade-in">
+                <div class="image-stack">
+                    <img src="https://i.ibb.co/xthMKQz5/MG-2276.jpg" alt="Red Config 1" class="config-image" loading="lazy">
+                    <img src="https://i.ibb.co/Z6h7SxLc/MG-2277.jpg" alt="Red Config 2" class="config-image" loading="lazy">
+                </div>
+                <div class="config-info">
+                    <div class="config-header">
+                        <h2 class="config-name">Crimson Sunset</h2>
+                        <span class="config-badge">Aggressive</span>
+                    </div>
+                    <p class="config-desc">Intense blood-orange skies with dragon motifs. For players who bring the heat to every fight.</p>
+                    <div class="download-btn">
+                        <i class="fas fa-download"></i>
+                        Download Config (.plist)
+                    </div>
+                </div>
+            </a>
+
+            <!-- GREEN CONFIG - MG_2278 & MG_2279 -->
+            <a href="https://www.mediafire.com/file/anun0ts4f4busm4/green.plist/file" target="_blank" class="config-card green fade-in">
+                <div class="image-stack">
+                    <img src="https://i.ibb.co/990jJPWS/MG-2278.jpg" alt="Green Config 1" class="config-image" loading="lazy">
+                    <img src="https://i.ibb.co/PsqXFkfk/MG-2279.jpg" alt="Green Config 2" class="config-image" loading="lazy">
+                </div>
+                <div class="config-info">
+                    <div class="config-header">
+                        <h2 class="config-name">Toxic Emerald</h2>
+                        <span class="config-badge">Biohazard</span>
+                    </div>
+                    <p class="config-desc">Radioactive green glow with toxic smoke effects. Dominate with poisonous style.</p>
+                    <div class="download-btn">
+                        <i class="fas fa-download"></i>
+                        Download Config (.plist)
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <i class="fas fa-bolt feature-icon"></i>
+                <h3>Instant Apply</h3>
+                <p>One-click configuration import directly into Critical Ops. No complicated setup required.</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-palette feature-icon"></i>
+                <h3>5 Unique Themes</h3>
+                <p>Carefully crafted color profiles for every playstyle, from stealth to aggressive entry.</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-shield-alt feature-icon"></i>
+                <h3>Safe & Secure</h3>
+                <p>Hosted on trusted MediaFire servers with direct download links. No ads, no malware.</p>
+            </div>
+        </div>
+
+        <div class="disclaimer">
+            <i class="fas fa-exclamation-triangle" style="color: var(--accent); margin-right: 0.5rem;"></i>
+            <strong>Installation Guide:</strong> Download the .plist file and import it through your hack's config section. Each config is optimized for specific lighting conditions and visual clarity.
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Critical Ops Configs. Not affiliated with Critical Force Ltd.</p>
+            <p style="margin-top: 0.5rem; font-size: 0.8rem;">Use at your own risk. Configurations are for educational purposes.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.config-card').forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = `all 0.6s ease ${index * 0.1}s`;
+            observer.observe(card);
+        });
+
+        // Image error handling
+        document.querySelectorAll('.config-image').forEach(img => {
+            img.addEventListener('error', function() {
+                this.style.display = 'none';
+                const placeholder = document.createElement('div');
+                placeholder.style.cssText = 'width:50%;height:100%;background:linear-gradient(135deg,#1a1a24,#2a2a3a);display:flex;align-items:center;justify-content:center;color:#666;font-size:0.8rem;';
+                placeholder.innerHTML = '<i class="fas fa-image" style="font-size:2rem;color:var(--accent);"></i>';
+                this.parentNode.insertBefore(placeholder, this);
+            });
+        });
+    </script>
+</body>
+</html>
