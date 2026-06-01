@@ -3,488 +3,971 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dionware Configs | Premium Configs</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <title>Dionware Configs | Premium Critical Ops Configs</title>
+    <link href="[cdnjs.cloudflare.com](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css)" rel="stylesheet">
+    <link href="[fonts.googleapis.com](https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Rajdhani:wght@500;600;700&family=Orbitron:wght@400;700;900&display=swap)" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --primary-bg: #0a0a0f;
-            --secondary-bg: #12121a;
-            --card-bg: #1a1a24;
+            --bg-0: #050508;
+            --bg-1: #0d0d14;
+            --bg-2: #13131e;
+            --bg-3: #1a1a28;
             --accent: #ff6b35;
-            --text-primary: #ffffff;
-            --text-secondary: #a0a0b0;
-            --border: #2a2a3a;
+            --accent-dim: rgba(255,107,53,0.15);
+            --accent-glow: rgba(255,107,53,0.4);
+            --text-1: #ffffff;
+            --text-2: #b0b0c8;
+            --text-3: #6a6a88;
+            --border: rgba(255,255,255,0.07);
+            --border-hover: rgba(255,255,255,0.15);
+            --golden: #ffd700;
+            --purple: #c084fc;
+            --blue: #38bdf8;
+            --red: #f87171;
+            --green: #34d399;
         }
+
+        html { scroll-behavior: smooth; }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--primary-bg);
-            color: var(--text-primary);
-            line-height: 1.6;
+            background: var(--bg-0);
+            color: var(--text-1);
             overflow-x: hidden;
+            line-height: 1.6;
         }
 
-        .bg-animation {
+        /* ── NOISE OVERLAY ── */
+        body::before {
+            content: '';
             position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='[w3.org](http://www.w3.org/2000/svg)'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.5;
+        }
+
+        /* ── AURORA BG ── */
+        .aurora {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .aurora-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            mix-blend-mode: screen;
+            animation: drift 20s ease-in-out infinite;
+        }
+        .aurora-blob:nth-child(1) { width: 800px; height: 800px; background: rgba(255,107,53,0.12); top:-200px; left:-200px; animation-delay: 0s; }
+        .aurora-blob:nth-child(2) { width: 600px; height: 600px; background: rgba(138,43,226,0.1); top:50%; right:-150px; animation-delay: -7s; animation-direction: reverse; }
+        .aurora-blob:nth-child(3) { width: 500px; height: 500px; background: rgba(56,189,248,0.08); bottom:-100px; left:40%; animation-delay: -14s; }
+        @keyframes drift {
+            0%,100% { transform: translate(0,0) scale(1); }
+            33% { transform: translate(60px,-40px) scale(1.05); }
+            66% { transform: translate(-40px,60px) scale(0.95); }
+        }
+
+        /* ── GRID LINES ── */
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+        }
+
+        /* ── LAYOUT ── */
+        .wrap { position: relative; z-index: 1; }
+        .container { max-width: 1360px; margin: 0 auto; padding: 0 2rem; }
+
+        /* ── NAV ── */
+        nav {
+            position: sticky;
             top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(255, 107, 53, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(138, 43, 226, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(0, 255, 255, 0.05) 0%, transparent 50%);
-            animation: bgPulse 8s ease-in-out infinite;
+            z-index: 100;
+            padding: 1rem 0;
+            background: rgba(5,5,8,0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .nav-logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            background: linear-gradient(120deg, #fff 30%, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nav-pills {
+            display: flex;
+            gap: 0.5rem;
+            list-style: none;
+        }
+        .nav-pills a {
+            display: block;
+            padding: 0.45rem 1.1rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-2);
+            text-decoration: none;
+            border: 1px solid transparent;
+            transition: all 0.25s;
+        }
+        .nav-pills a:hover {
+            color: #fff;
+            border-color: var(--border-hover);
+            background: rgba(255,255,255,0.05);
+        }
+        .nav-cta {
+            padding: 0.5rem 1.3rem;
+            background: var(--accent);
+            color: #fff !important;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: all 0.25s;
+            box-shadow: 0 0 20px rgba(255,107,53,0.35);
+        }
+        .nav-cta:hover {
+            background: #ff8c5a;
+            box-shadow: 0 0 30px rgba(255,107,53,0.55);
+            transform: translateY(-1px);
         }
 
-        @keyframes bgPulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
-        header {
-            padding: 2rem 0;
+        /* ── HERO ── */
+        .hero {
+            padding: 8rem 0 5rem;
             text-align: center;
             position: relative;
         }
-
-        .logo {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 3rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #fff 0%, #ff6b35 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 0.5rem;
-        }
-
-        .subtitle {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            font-weight: 300;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .configs-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
-            gap: 2rem;
-            padding: 3rem 0;
-        }
-
-        .config-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            overflow: hidden;
-            border: 1px solid var(--border);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            cursor: pointer;
-            text-decoration: none;
-            display: block;
-        }
-
-        .config-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.8) 100%);
-            z-index: 1;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .config-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--accent);
-            box-shadow: 0 20px 40px rgba(255, 107, 53, 0.2);
-        }
-
-        .config-card:hover::before {
-            opacity: 1;
-        }
-
-        .image-stack {
-            position: relative;
-            height: 300px;
-            overflow: hidden;
-            display: flex;
-        }
-
-        .config-image {
-            width: 50%;
-            height: 100%;
-            object-fit: cover;
-            transition: all 0.5s ease;
-        }
-
-        .config-image:first-child {
-            clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);
-        }
-
-        .config-image:last-child {
-            clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%);
-            margin-left: -15%;
-        }
-
-        .config-card:hover .config-image:first-child {
-            transform: scale(1.05);
-        }
-
-        .config-card:hover .config-image:last-child {
-            transform: scale(1.05);
-        }
-
-        .config-info {
-            padding: 1.5rem;
-            position: relative;
-            z-index: 2;
-            background: var(--card-bg);
-        }
-
-        .config-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .config-name {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 1.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .config-badge {
-            padding: 0.4rem 1rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .golden .config-name { color: #ffd700; }
-        .golden .config-badge { background: rgba(255, 215, 0, 0.2); color: #ffd700; border: 1px solid #ffd700; }
-        .golden:hover { box-shadow: 0 20px 40px rgba(255, 215, 0, 0.3); border-color: #ffd700; }
-
-        .purple .config-name { color: #da70d6; }
-        .purple .config-badge { background: rgba(218, 112, 214, 0.2); color: #da70d6; border: 1px solid #da70d6; }
-        .purple:hover { box-shadow: 0 20px 40px rgba(218, 112, 214, 0.3); border-color: #da70d6; }
-
-        .blue .config-name { color: #00bfff; }
-        .blue .config-badge { background: rgba(0, 191, 255, 0.2); color: #00bfff; border: 1px solid #00bfff; }
-        .blue:hover { box-shadow: 0 20px 40px rgba(0, 191, 255, 0.3); border-color: #00bfff; }
-
-        .red .config-name { color: #ff4444; }
-        .red .config-badge { background: rgba(255, 68, 68, 0.2); color: #ff4444; border: 1px solid #ff4444; }
-        .red:hover { box-shadow: 0 20px 40px rgba(255, 68, 68, 0.3); border-color: #ff4444; }
-
-        .green .config-name { color: #00ff88; }
-        .green .config-badge { background: rgba(0, 255, 136, 0.2); color: #00ff88; border: 1px solid #00ff88; }
-        .green:hover { box-shadow: 0 20px 40px rgba(0, 255, 136, 0.3); border-color: #00ff88; }
-
-        .config-desc {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .download-btn {
+        .hero-eyebrow {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.8rem 1.5rem;
-            background: linear-gradient(135deg, var(--accent) 0%, #ff8c5a 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
+            padding: 0.4rem 1rem;
+            border-radius: 999px;
+            border: 1px solid rgba(255,107,53,0.4);
+            background: rgba(255,107,53,0.08);
+            font-size: 0.75rem;
             font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            width: 100%;
-            justify-content: center;
-        }
-
-        .config-card:hover .download-btn {
-            background: white;
-            color: var(--primary-bg);
-        }
-
-        .features {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-            padding: 4rem 0;
-            text-align: center;
-        }
-
-        .feature {
-            padding: 2rem;
-            background: var(--secondary-bg);
-            border-radius: 15px;
-            border: 1px solid var(--border);
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
             color: var(--accent);
+            margin-bottom: 2rem;
+        }
+        .hero-eyebrow span { display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--accent); animation: blink 1.4s ease-in-out infinite; }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+        .hero-title {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(2.8rem, 7vw, 6rem);
+            font-weight: 900;
+            line-height: 1.05;
+            letter-spacing: -1px;
+            margin-bottom: 1.5rem;
+        }
+        .hero-title .line-1 { display:block; color: #fff; }
+        .hero-title .line-2 {
+            display: block;
+            background: linear-gradient(135deg, var(--accent) 0%, #ff9a6c 50%, #ffcc00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 40px rgba(255,107,53,0.5));
+        }
+
+        .hero-sub {
+            max-width: 540px;
+            margin: 0 auto 3rem;
+            font-size: 1.1rem;
+            color: var(--text-2);
+            font-weight: 400;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.9rem 2rem;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: all 0.3s;
+            box-shadow: 0 0 30px rgba(255,107,53,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 40px rgba(255,107,53,0.6), inset 0 1px 0 rgba(255,255,255,0.15);
+        }
+        .btn-ghost {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.9rem 2rem;
+            background: transparent;
+            color: #fff;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            border: 1px solid var(--border-hover);
+            transition: all 0.3s;
+        }
+        .btn-ghost:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.3);
+            transform: translateY(-3px);
+        }
+
+        /* ── STATS BAR ── */
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 0;
+            margin: 4rem 0;
+            background: var(--bg-2);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        .stat-item {
+            flex: 1;
+            padding: 2rem;
+            text-align: center;
+            border-right: 1px solid var(--border);
+            position: relative;
+        }
+        .stat-item:last-child { border-right: none; }
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 40%; height: 2px;
+            background: var(--accent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .stat-item:hover::before { opacity: 1; }
+        .stat-num {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .stat-label { font-size: 0.8rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 0.3rem; }
+
+        /* ── SECTION HEADER ── */
+        .section-header {
+            text-align: center;
+            margin-bottom: 3.5rem;
+        }
+        .section-tag {
+            display: inline-block;
+            padding: 0.3rem 0.9rem;
+            background: var(--accent-dim);
+            color: var(--accent);
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
             margin-bottom: 1rem;
         }
+        .section-title {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(1.6rem, 4vw, 2.5rem);
+            font-weight: 900;
+            margin-bottom: 0.75rem;
+        }
+        .section-sub { color: var(--text-2); max-width: 500px; margin: 0 auto; }
 
-        .feature h3 {
+        /* ── CONFIG GRID ── */
+        #configs { padding: 5rem 0; }
+        .configs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(580px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* ── CONFIG CARD ── */
+        .config-card {
+            display: block;
+            text-decoration: none;
+            border-radius: 24px;
+            overflow: hidden;
+            background: var(--bg-2);
+            border: 1px solid var(--border);
+            transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.4s ease, border-color 0.4s ease;
+            position: relative;
+            group: true;
+        }
+        .config-card:hover { transform: translateY(-8px) scale(1.01); }
+
+        /* Themed card accents */
+        .config-card.golden { --t: var(--golden); --tg: rgba(255,215,0,0.2); }
+        .config-card.purple { --t: var(--purple); --tg: rgba(192,132,252,0.2); }
+        .config-card.blue   { --t: var(--blue);   --tg: rgba(56,189,248,0.2); }
+        .config-card.red    { --t: var(--red);     --tg: rgba(248,113,113,0.2); }
+        .config-card.green  { --t: var(--green);   --tg: rgba(52,211,153,0.2); }
+
+        .config-card:hover { border-color: var(--t); box-shadow: 0 24px 60px -12px var(--tg), 0 0 0 1px var(--t); }
+
+        /* Top accent line */
+        .config-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--t), transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        .config-card:hover::after { opacity: 1; }
+
+        /* ── IMAGES ── */
+        .img-section {
+            position: relative;
+            height: 280px;
+            overflow: hidden;
+            display: flex;
+            align-items: stretch;
+        }
+        .img-section::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent 40%, var(--bg-2) 100%);
+            z-index: 2;
+        }
+
+        .half-img {
+            flex: 1;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+            filter: brightness(0.85) saturate(1.1);
+        }
+        .half-img:first-child {
+            clip-path: polygon(0 0, 100% 0, 88% 100%, 0 100%);
+            margin-right: -10%;
+            z-index: 1;
+        }
+        .half-img:last-child {
+            clip-path: polygon(12% 0, 100% 0, 100% 100%, 0 100%);
+            z-index: 0;
+        }
+        .config-card:hover .half-img { transform: scale(1.06); filter: brightness(1) saturate(1.3); }
+
+        /* Badge overlay on image */
+        .img-badge {
+            position: absolute;
+            top: 1rem; right: 1rem;
+            z-index: 3;
+            padding: 0.35rem 0.9rem;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            background: rgba(0,0,0,0.55);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--t);
+            color: var(--t);
+        }
+
+        /* ── CARD BODY ── */
+        .card-body {
+            padding: 1.75rem 2rem 2rem;
+        }
+        .card-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+        .config-name {
             font-family: 'Rajdhani', sans-serif;
-            font-size: 1.3rem;
+            font-size: 1.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--t);
+            line-height: 1;
+        }
+        .config-tag {
+            margin-top: 0.2rem;
+            padding: 0.3rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: var(--tg);
+            color: var(--t);
+            border: 1px solid var(--t);
+            white-space: nowrap;
+            opacity: 0.85;
+        }
+        .config-desc {
+            color: var(--text-2);
+            font-size: 0.92rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        /* Download button */
+        .dl-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            width: 100%;
+            padding: 0.9rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            background: var(--tg);
+            color: var(--t);
+            border: 1px solid var(--t);
+            transition: all 0.3s ease;
+        }
+        .config-card:hover .dl-btn {
+            background: var(--t);
+            color: #000;
+            box-shadow: 0 8px 24px -4px var(--tg);
+        }
+        .dl-btn i { font-size: 0.85rem; }
+
+        /* ── FEATURES ── */
+        #features { padding: 5rem 0; }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        .feat-card {
+            padding: 2.5rem 2rem;
+            border-radius: 20px;
+            background: var(--bg-2);
+            border: 1px solid var(--border);
+            transition: all 0.35s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .feat-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+        .feat-card:hover::before { transform: scaleX(1); }
+        .feat-card:hover {
+            border-color: var(--border-hover);
+            background: var(--bg-3);
+            transform: translateY(-4px);
+        }
+        .feat-icon-wrap {
+            width: 56px; height: 56px;
+            border-radius: 14px;
+            background: var(--accent-dim);
+            border: 1px solid rgba(255,107,53,0.3);
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+        .feat-icon-wrap i { font-size: 1.4rem; color: var(--accent); }
+        .feat-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             margin-bottom: 0.5rem;
         }
+        .feat-desc { color: var(--text-2); font-size: 0.9rem; line-height: 1.7; }
 
-        .feature p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
+        /* ── INSTALLATION ── */
+        #install { padding: 5rem 0; }
+        .install-wrap {
+            background: var(--bg-2);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            overflow: hidden;
         }
+        .install-header {
+            padding: 2.5rem 2.5rem 0;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 2rem;
+        }
+        .install-steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0;
+        }
+        .install-step {
+            padding: 2.5rem;
+            border-right: 1px solid var(--border);
+            position: relative;
+        }
+        .install-step:last-child { border-right: none; }
+        .step-num {
+            font-family: 'Orbitron', monospace;
+            font-size: 3rem;
+            font-weight: 900;
+            color: rgba(255,107,53,0.15);
+            line-height: 1;
+            margin-bottom: 0.75rem;
+            letter-spacing: -2px;
+        }
+        .step-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 0.4rem;
+        }
+        .step-desc { color: var(--text-2); font-size: 0.85rem; line-height: 1.6; }
 
+        /* ── FOOTER ── */
         footer {
-            text-align: center;
-            padding: 3rem 0;
             border-top: 1px solid var(--border);
-            margin-top: 4rem;
-            color: var(--text-secondary);
+            padding: 3rem 0;
+            margin-top: 2rem;
+        }
+        .footer-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .footer-logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 1rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            background: linear-gradient(120deg, #fff 30%, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .footer-copy { color: var(--text-3); font-size: 0.82rem; }
+        .footer-disclaimer {
+            font-size: 0.78rem;
+            color: var(--text-3);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .footer-disclaimer i { color: var(--accent); font-size: 0.75rem; }
+
+        /* ── SCROLL REVEAL ── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .reveal.visible { opacity: 1; transform: none; }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+        .reveal-delay-5 { transition-delay: 0.5s; }
+
+        /* ── CURSOR GLOW ── */
+        .cursor-glow {
+            position: fixed;
+            width: 400px; height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,107,53,0.06) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 2;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.3s;
         }
 
-        .disclaimer {
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 1.5rem;
-            background: rgba(255, 107, 53, 0.1);
-            border-left: 4px solid var(--accent);
-            border-radius: 8px;
-            font-size: 0.9rem;
+        /* ── RESPONSIVE ── */
+        @media (max-width: 900px) {
+            .configs-grid { grid-template-columns: 1fr; }
+            .features-grid { grid-template-columns: 1fr; }
+            .install-steps { grid-template-columns: repeat(2, 1fr); }
+            .install-step:nth-child(2) { border-right: none; }
+            .install-step:nth-child(3) { border-top: 1px solid var(--border); }
+            .stats-bar { flex-direction: column; }
+            .stat-item { border-right: none; border-bottom: 1px solid var(--border); }
+            .stat-item:last-child { border-bottom: none; }
+            .nav-pills { display: none; }
         }
-
-        @media (max-width: 768px) {
-            .configs-grid {
-                grid-template-columns: 1fr;
-            }
-            .image-stack {
-                height: 250px;
-            }
-            .config-image:first-child {
-                clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%);
-            }
-            .config-image:last-child {
-                clip-path: polygon(10% 0, 100% 0, 100% 100%, 0 100%);
-                margin-left: -10%;
-            }
-            .features {
-                grid-template-columns: 1fr;
-            }
-            .logo {
-                font-size: 2rem;
-            }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.6s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        @media (max-width: 600px) {
+            .hero { padding: 5rem 0 3rem; }
+            .install-steps { grid-template-columns: 1fr; }
+            .install-step { border-right: none; border-bottom: 1px solid var(--border); }
+            .footer-inner { flex-direction: column; text-align: center; }
         }
     </style>
 </head>
 <body>
-    <div class="bg-animation"></div>
-    
-    <header>
+
+<div class="cursor-glow" id="cursorGlow"></div>
+<div class="aurora">
+    <div class="aurora-blob"></div>
+    <div class="aurora-blob"></div>
+    <div class="aurora-blob"></div>
+</div>
+<div class="grid-bg"></div>
+
+<div class="wrap">
+
+    <!-- NAV -->
+    <nav>
         <div class="container">
-            <h1 class="logo">Dionware Configs</h1>
-            <p class="subtitle">Premium Configs</p>
-        </div>
-    </header>
-
-    <main class="container">
-        <div class="configs-grid">
-            <!-- GOLDEN CONFIG - MG_2270 & MG_2271 -->
-            <a href="https://www.mediafire.com/file/pz6udnre7r50lhc/golden.plist/file" target="_blank" class="config-card golden fade-in">
-                <div class="image-stack">
-                    <img src="https://i.ibb.co/DHzkJNWR/MG-2270.jpg" alt="Golden Config 1" class="config-image" loading="lazy">
-                    <img src="https://i.ibb.co/v4TyxmvW/MG-2271.jpg" alt="Golden Config 2" class="config-image" loading="lazy">
-                </div>
-                <div class="config-info">
-                    <div class="config-header">
-                        <h2 class="config-name">Golden Dynasty</h2>
-                        <span class="config-badge">Premium</span>
-                    </div>
-                    <p class="config-desc">Luxurious golden atmosphere with warm amber tones. Perfect for players who demand royalty in every match.</p>
-                    <div class="download-btn">
-                        <i class="fas fa-download"></i>
-                        Download Config (.plist)
-                    </div>
-                </div>
-            </a>
-
-            <!-- PURPLE CONFIG - MG_2272 & MG_2273 -->
-            <a href="https://www.mediafire.com/file/fy93npan2kzrvwd/purple.plist/file" target="_blank" class="config-card purple fade-in">
-                <div class="image-stack">
-                    <img src="https://i.ibb.co/1JhD1mcW/MG-2272.jpg" alt="Purple Config 1" class="config-image" loading="lazy">
-                    <img src="https://i.ibb.co/4npxN1cc/MG-2273.jpg" alt="Purple Config 2" class="config-image" loading="lazy">
-                </div>
-                <div class="config-info">
-                    <div class="config-header">
-                        <h2 class="config-name">Neon Purple</h2>
-                        <span class="config-badge">Cyber</span>
-                    </div>
-                    <p class="config-desc">Deep violet skies with electric pink accents. Cyberpunk aesthetic for the modern warrior.</p>
-                    <div class="download-btn">
-                        <i class="fas fa-download"></i>
-                        Download Config (.plist)
-                    </div>
-                </div>
-            </a>
-
-            <!-- BLUE CONFIG - MG_2274 & MG_2275 -->
-            <a href="https://www.mediafire.com/file/fe6lraos131l031/blue.plist/file" target="_blank" class="config-card blue fade-in">
-                <div class="image-stack">
-                    <img src="https://i.ibb.co/RpCYQQ97/MG-2274.jpg" alt="Blue Config 1" class="config-image" loading="lazy">
-                    <img src="https://i.ibb.co/ZzW6SYbZ/MG-2275.jpg" alt="Blue Config 2" class="config-image" loading="lazy">
-                </div>
-                <div class="config-info">
-                    <div class="config-header">
-                        <h2 class="config-name">Arctic Aurora</h2>
-                        <span class="config-badge">Frozen</span>
-                    </div>
-                    <p class="config-desc">Icy blue northern lights with crystalline clarity. Cold, calculated precision for snipers.</p>
-                    <div class="download-btn">
-                        <i class="fas fa-download"></i>
-                        Download Config (.plist)
-                    </div>
-                </div>
-            </a>
-
-            <!-- RED CONFIG - MG_2276 & MG_2277 -->
-            <a href="https://www.mediafire.com/file/yfgxthhordsqxd7/red.plist/file" target="_blank" class="config-card red fade-in">
-                <div class="image-stack">
-                    <img src="https://i.ibb.co/xthMKQz5/MG-2276.jpg" alt="Red Config 1" class="config-image" loading="lazy">
-                    <img src="https://i.ibb.co/Z6h7SxLc/MG-2277.jpg" alt="Red Config 2" class="config-image" loading="lazy">
-                </div>
-                <div class="config-info">
-                    <div class="config-header">
-                        <h2 class="config-name">Crimson Sunset</h2>
-                        <span class="config-badge">Aggressive</span>
-                    </div>
-                    <p class="config-desc">Intense blood-orange skies with dragon motifs. For players who bring the heat to every fight.</p>
-                    <div class="download-btn">
-                        <i class="fas fa-download"></i>
-                        Download Config (.plist)
-                    </div>
-                </div>
-            </a>
-
-            <!-- GREEN CONFIG - MG_2278 & MG_2279 -->
-            <a href="https://www.mediafire.com/file/anun0ts4f4busm4/green.plist/file" target="_blank" class="config-card green fade-in">
-                <div class="image-stack">
-                    <img src="https://i.ibb.co/990jJPWS/MG-2278.jpg" alt="Green Config 1" class="config-image" loading="lazy">
-                    <img src="https://i.ibb.co/PsqXFkfk/MG-2279.jpg" alt="Green Config 2" class="config-image" loading="lazy">
-                </div>
-                <div class="config-info">
-                    <div class="config-header">
-                        <h2 class="config-name">Toxic Emerald</h2>
-                        <span class="config-badge">Biohazard</span>
-                    </div>
-                    <p class="config-desc">Radioactive green glow with toxic smoke effects. Dominate with poisonous style.</p>
-                    <div class="download-btn">
-                        <i class="fas fa-download"></i>
-                        Download Config (.plist)
-                    </div>
-                </div>
-            </a>
-        </div>
-
-        <div class="features">
-            <div class="feature">
-                <i class="fas fa-bolt feature-icon"></i>
-                <h3>Instant Apply</h3>
-                <p>One-click configuration import directly into Critical Ops. No complicated setup required.</p>
-            </div>
-            <div class="feature">
-                <i class="fas fa-palette feature-icon"></i>
-                <h3>5 Unique Themes</h3>
-                <p>Carefully crafted color profiles for every playstyle, from stealth to aggressive entry.</p>
-            </div>
-            <div class="feature">
-                <i class="fas fa-shield-alt feature-icon"></i>
-                <h3>Safe & Secure</h3>
-                <p>Hosted on trusted MediaFire servers with direct download links. No ads, no malware.</p>
+            <div class="nav-inner">
+                <div class="nav-logo">Dionware</div>
+                <ul class="nav-pills">
+                    <li><a href="#configs">Configs</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#install">Install</a></li>
+                </ul>
+                <a href="#configs" class="nav-cta">
+                    <i class="fas fa-download"></i> Download
+                </a>
             </div>
         </div>
+    </nav>
 
-        <div class="disclaimer">
-            <i class="fas fa-exclamation-triangle" style="color: var(--accent); margin-right: 0.5rem;"></i>
-            <strong>Installation Guide:</strong> Download the .plist file and import it through your hack's config section. Each config is optimized for specific lighting conditions and visual clarity.
+    <!-- HERO -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-eyebrow">
+                <span></span> Critical Ops · Premium Configs · 2026
+            </div>
+            <h1 class="hero-title">
+                <span class="line-1">Elevate Your</span>
+                <span class="line-2">Visual Game</span>
+            </h1>
+            <p class="hero-sub">
+                Handcrafted .plist configurations that transform your Critical Ops visuals. Five unique themes, one dominant style.
+            </p>
+            <div class="hero-btns">
+                <a href="#configs" class="btn-primary">
+                    <i class="fas fa-fire"></i> Explore Configs
+                </a>
+                <a href="#install" class="btn-ghost">
+                    <i class="fas fa-book-open"></i> How to Install
+                </a>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-bar reveal">
+                <div class="stat-item">
+                    <div class="stat-num">5</div>
+                    <div class="stat-label">Unique Themes</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num">0ms</div>
+                    <div class="stat-label">Setup Time</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num">100%</div>
+                    <div class="stat-label">Safe Files</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num">Free</div>
+                    <div class="stat-label">Always Free</div>
+                </div>
+            </div>
         </div>
-    </main>
+    </section>
 
+    <!-- CONFIGS -->
+    <section id="configs">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">Config Library</div>
+                <h2 class="section-title">Choose Your Style</h2>
+                <p class="section-sub">Each config is tuned for a different visual feel — pick what matches your energy.</p>
+            </div>
+
+            <div class="configs-grid">
+
+                <!-- GOLDEN -->
+                <a href="[mediafire.com](https://www.mediafire.com/file/pz6udnre7r50lhc/golden.plist/file)" target="_blank" class="config-card golden reveal reveal-delay-1">
+                    <div class="img-section">
+                        <img src="[i.ibb.co](https://i.ibb.co/DHzkJNWR/MG-2270.jpg)" alt="Golden Config 1" class="half-img" loading="lazy">
+                        <img src="[i.ibb.co](https://i.ibb.co/v4TyxmvW/MG-2271.jpg)" alt="Golden Config 2" class="half-img" loading="lazy">
+                        <span class="img-badge">Premium</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-top">
+                            <h2 class="config-name">Golden Dynasty</h2>
+                            <span class="config-tag">Premium</span>
+                        </div>
+                        <p class="config-desc">Luxurious golden atmosphere with warm amber tones. Perfect for players who demand royalty in every match.</p>
+                        <div class="dl-btn">
+                            <i class="fas fa-download"></i> Download Config (.plist)
+                        </div>
+                    </div>
+                </a>
+
+                <!-- PURPLE -->
+                <a href="[mediafire.com](https://www.mediafire.com/file/fy93npan2kzrvwd/purple.plist/file)" target="_blank" class="config-card purple reveal reveal-delay-2">
+                    <div class="img-section">
+                        <img src="[i.ibb.co](https://i.ibb.co/1JhD1mcW/MG-2272.jpg)" alt="Purple Config 1" class="half-img" loading="lazy">
+                        <img src="[i.ibb.co](https://i.ibb.co/4npxN1cc/MG-2273.jpg)" alt="Purple Config 2" class="half-img" loading="lazy">
+                        <span class="img-badge">Cyber</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-top">
+                            <h2 class="config-name">Neon Purple</h2>
+                            <span class="config-tag">Cyber</span>
+                        </div>
+                        <p class="config-desc">Deep violet skies with electric pink accents. Cyberpunk aesthetic for the modern warrior.</p>
+                        <div class="dl-btn">
+                            <i class="fas fa-download"></i> Download Config (.plist)
+                        </div>
+                    </div>
+                </a>
+
+                <!-- BLUE -->
+                <a href="[mediafire.com](https://www.mediafire.com/file/fe6lraos131l031/blue.plist/file)" target="_blank" class="config-card blue reveal reveal-delay-3">
+                    <div class="img-section">
+                        <img src="[i.ibb.co](https://i.ibb.co/RpCYQQ97/MG-2274.jpg)" alt="Blue Config 1" class="half-img" loading="lazy">
+                        <img src="[i.ibb.co](https://i.ibb.co/ZzW6SYbZ/MG-2275.jpg)" alt="Blue Config 2" class="half-img" loading="lazy">
+                        <span class="img-badge">Frozen</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-top">
+                            <h2 class="config-name">Arctic Aurora</h2>
+                            <span class="config-tag">Frozen</span>
+                        </div>
+                        <p class="config-desc">Icy blue northern lights with crystalline clarity. Cold, calculated precision for snipers.</p>
+                        <div class="dl-btn">
+                            <i class="fas fa-download"></i> Download Config (.plist)
+                        </div>
+                    </div>
+                </a>
+
+                <!-- RED -->
+                <a href="[mediafire.com](https://www.mediafire.com/file/yfgxthhordsqxd7/red.plist/file)" target="_blank" class="config-card red reveal reveal-delay-4">
+                    <div class="img-section">
+                        <img src="[i.ibb.co](https://i.ibb.co/xthMKQz5/MG-2276.jpg)" alt="Red Config 1" class="half-img" loading="lazy">
+                        <img src="[i.ibb.co](https://i.ibb.co/Z6h7SxLc/MG-2277.jpg)" alt="Red Config 2" class="half-img" loading="lazy">
+                        <span class="img-badge">Aggressive</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-top">
+                            <h2 class="config-name">Crimson Sunset</h2>
+                            <span class="config-tag">Aggressive</span>
+                        </div>
+                        <p class="config-desc">Intense blood-orange skies with dragon motifs. For players who bring the heat to every fight.</p>
+                        <div class="dl-btn">
+                            <i class="fas fa-download"></i> Download Config (.plist)
+                        </div>
+                    </div>
+                </a>
+
+                <!-- GREEN -->
+                <a href="[mediafire.com](https://www.mediafire.com/file/anun0ts4f4busm4/green.plist/file)" target="_blank" class="config-card green reveal reveal-delay-5">
+                    <div class="img-section">
+                        <img src="[i.ibb.co](https://i.ibb.co/990jJPWS/MG-2278.jpg)" alt="Green Config 1" class="half-img" loading="lazy">
+                        <img src="[i.ibb.co](https://i.ibb.co/PsqXFkfk/MG-2279.jpg)" alt="Green Config 2" class="half-img" loading="lazy">
+                        <span class="img-badge">Biohazard</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-top">
+                            <h2 class="config-name">Toxic Emerald</h2>
+                            <span class="config-tag">Biohazard</span>
+                        </div>
+                        <p class="config-desc">Radioactive green glow with toxic smoke effects. Dominate with poisonous style.</p>
+                        <div class="dl-btn">
+                            <i class="fas fa-download"></i> Download Config (.plist)
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section id="features">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">Why Dionware</div>
+                <h2 class="section-title">Built Different</h2>
+                <p class="section-sub">Every detail is deliberate. Every config is tested.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feat-card reveal reveal-delay-1">
+                    <div class="feat-icon-wrap"><i class="fas fa-bolt"></i></div>
+                    <h3 class="feat-title">Instant Apply</h3>
+                    <p class="feat-desc">One-click import directly into Critical Ops. Drop the .plist, restart, done. No complicated setup, no guesswork.</p>
+                </div>
+                <div class="feat-card reveal reveal-delay-2">
+                    <div class="feat-icon-wrap"><i class="fas fa-palette"></i></div>
+                    <h3 class="feat-title">5 Unique Themes</h3>
+                    <p class="feat-desc">Carefully tuned color profiles for every playstyle — from ice-cold sniper patience to blood-red aggressive entry.</p>
+                </div>
+                <div class="feat-card reveal reveal-delay-3">
+                    <div class="feat-icon-wrap"><i class="fas fa-shield-halved"></i></div>
+                    <h3 class="feat-title">Safe & Clean</h3>
+                    <p class="feat-desc">Hosted on MediaFire with direct links. No redirect chains, no bundled software, no nonsense.</p>
+                </div>
+                <div class="feat-card reveal reveal-delay-4">
+                    <div class="feat-icon-wrap"><i class="fas fa-eye"></i></div>
+                    <h3 class="feat-title">Visual Clarity</h3>
+                    <p class="feat-desc">Each config is optimized for maximum visibility in its respective lighting environment and color palette.</p>
+                </div>
+                <div class="feat-card reveal reveal-delay-5">
+                    <div class="feat-icon-wrap"><i class="fas fa-infinity"></i></div>
+                    <h3 class="feat-title">Always Free</h3>
+                    <p class="feat-desc">No paywalls, no subscriptions, no Discord DMs. Download directly — forever free, forever open.</p>
+                </div>
+                <div class="feat-card reveal reveal-delay-5">
+                    <div class="feat-icon-wrap"><i class="fas fa-rotate"></i></div>
+                    <h3 class="feat-title">Regularly Updated</h3>
+                    <p class="feat-desc">New configs drop with game updates. Dionware stays current so your visuals never fall behind.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- INSTALL -->
+    <section id="install">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">Get Started</div>
+                <h2 class="section-title">Installation Guide</h2>
+                <p class="section-sub">Four simple steps and you're in.</p>
+            </div>
+            <div class="install-wrap reveal">
+                <div class="install-header">
+                    <div style="display:flex; align-items:center; gap:0.75rem;">
+                        <div style="width:40px;height:40px;border-radius:10px;background:var(--accent-dim);border:1px solid rgba(255,107,53,0.3);display:flex;align-items:center;justify-content:center;">
+                            <i class="fas fa-terminal" style="color:var(--accent);font-size:1rem;"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight:700;font-size:1rem;">Quick Install</div>
+                            <div style="font-size:0.8rem;color:var(--text-3);">Compatible with all Critical Ops mod menus</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="install-steps">
+                    <div class="install-step">
+                        <div class="step-num">01</div>
+                        <div class="step-title">Pick a Config</div>
+                        <p class="step-desc">Browse the library above and click the config that matches your vibe. It'll take you straight to the download.</p>
+                    </div>
+                    <div class="install-step">
+                        <div class="step-num">02</div>
+                        <div class="step-title">Download .plist</div>
+                        <p class="step-desc">Tap the MediaFire link and save the .plist file to your device storage. No account needed.</p>
+                    </div>
+                    <div class="install-step">
+                        <div class="step-num">03</div>
+                        <div class="step-title">Import Config</div>
+                        <p class="step-desc">Open your mod menu, navigate to the Config section, and import the downloaded .plist file.</p>
+                    </div>
+                    <div class="install-step">
+                        <div class="step-num">04</div>
+                        <div class="step-title">Launch & Frag</div>
+                        <p class="step-desc">Restart Critical Ops, apply the config, and enjoy your new visual environment. GG.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
     <footer>
         <div class="container">
-            <p>&copy; 2026 Dionware Configs.</p>
-            <p style="margin-top: 0.5rem; font-size: 0.8rem;">Use at your own risk. Configurations are for educational purposes.</p>
+            <div class="footer-inner">
+                <div class="footer-logo">Dionware</div>
+                <div class="footer-copy">© 2026 Dionware Configs. All rights reserved.</div>
+                <div class="footer-disclaimer">
+                    <i class="fas fa-triangle-exclamation"></i>
+                    For educational purposes. Use at your own risk.
+                </div>
+            </div>
         </div>
     </footer>
 
-    <script>
-        // Smooth scroll animation
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
+</div><!-- /wrap -->
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
+<script>
+    // Cursor glow
+    const glow = document.getElementById('cursorGlow');
+    document.addEventListener('mousemove', e => {
+        glow.style.left = e.clientX + 'px';
+        glow.style.top  = e.clientY + 'px';
+    });
+    document.addEventListener('mouseleave', () => glow.style.opacity = '0');
+    document.addEventListener('mouseenter', () => glow.style.opacity = '1');
 
-        document.querySelectorAll('.config-card').forEach((card, index) => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            card.style.transition = `all 0.6s ease ${index * 0.1}s`;
-            observer.observe(card);
+    // Scroll reveal
+    const revealEls = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                e.target.classList.add('visible');
+                io.unobserve(e.target);
+            }
         });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    revealEls.forEach(el => io.observe(el));
 
-        // Image error handling
-        document.querySelectorAll('.config-image').forEach(img => {
-            img.addEventListener('error', function() {
-                this.style.display = 'none';
-                const placeholder = document.createElement('div');
-                placeholder.style.cssText = 'width:50%;height:100%;background:linear-gradient(135deg,#1a1a24,#2a2a3a);display:flex;align-items:center;justify-content:center;color:#666;font-size:0.8rem;';
-                placeholder.innerHTML = '<i class="fas fa-image" style="font-size:2rem;color:var(--accent);"></i>';
-                this.parentNode.insertBefore(placeholder, this);
-            });
+    // Image error fallback
+    document.querySelectorAll('.half-img').forEach(img => {
+        img.addEventListener('error', function () {
+            this.style.background = 'linear-gradient(135deg, #1a1a28, #2a2a40)';
+            this.style.minHeight  = '100%';
+            this.removeAttribute('src');
         });
-    </script>
+    });
+
+    // Smooth active nav highlight
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-pills a');
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(s => {
+            if (window.scrollY >= s.offsetTop - 120) current = s.id;
+        });
+        navLinks.forEach(a => {
+            a.style.color = a.getAttribute('href') === '#' + current ? '#fff' : '';
+            a.style.background = a.getAttribute('href') === '#' + current ? 'rgba(255,255,255,0.07)' : '';
+        });
+    }, { passive: true });
+</script>
 </body>
 </html>
